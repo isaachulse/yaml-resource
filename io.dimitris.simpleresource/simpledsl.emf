@@ -1,0 +1,10 @@
+@namespace(uri="simpledsl", prefix="")
+package simpledsl;
+
+class University {
+	val Student[*] students;
+}
+
+class Student {
+	attr String name;
+}
