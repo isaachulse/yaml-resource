@@ -1,0 +1,10 @@
+<University>
+	<students>
+		<Student name="Alice"/>
+		<Student name="Bob"/>
+	</students>
+	<staff>
+		<Staff name="Colin"/>
+		<Staff name="Diana"/>
+	</staff>
+</University>

@@ -3,8 +3,14 @@ package simpledsl;
 
 class University {
 	val Student[*] students;
+	val Staff[*] staff;
+}
+
+class Staff {
+	attr String name;	
 }
 
 class Student {
 	attr String name;
+	//ref Staff supervisor;
 }

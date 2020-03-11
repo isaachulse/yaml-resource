@@ -39,9 +39,8 @@ public class SimpleResource extends ResourceImpl {
 				URI.createURI(new File("simpledsl.txt").toURI().toString()), true);
 		modelResource.load(null);
 		
-		for (EObject o : modelResource.getContents()) {
-			System.out.println(o);
-		}
+		// Print the contents of the resource
+		new ResourcePrinter().print(modelResource);
 	}
 	
 	public SimpleResource(URI uri) {
