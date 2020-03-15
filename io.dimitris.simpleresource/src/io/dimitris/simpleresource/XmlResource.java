@@ -25,29 +25,29 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 public class XmlResource extends ResourceImpl {
 	
 	
-	public static void main(String[] args) throws Exception {
-		
-		// Load metamodel
-		ResourceSet metamodelResourceSet = new ResourceSetImpl();
-		metamodelResourceSet.getResourceFactoryRegistry().
-			getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
-		Resource metamodelResource = metamodelResourceSet.getResource(
-			URI.createURI(new File("simpledsl.ecore").toURI().toString()), true);
-		metamodelResource.load(null);
-		EPackage metamodelEPackage = (EPackage) metamodelResource.getContents().get(0);
-		
-		// Set up the model resource
-		ResourceSet modelResourceSet = new ResourceSetImpl();
-		modelResourceSet.getPackageRegistry().put(metamodelEPackage.getNsURI(), metamodelEPackage);
-		modelResourceSet.getResourceFactoryRegistry().
-			getExtensionToFactoryMap().put("*", new XmlResourceFactory());
-		Resource modelResource = modelResourceSet.getResource(
-				URI.createURI(new File("simpledsl.xml").toURI().toString()), true);
-		modelResource.load(null);
-		
-		// Print the contents of the resource
-		new ResourcePrinter().print(modelResource);
-	}
+//	public static void main(String[] args) throws Exception {
+//		
+//		// Load metamodel
+//		ResourceSet metamodelResourceSet = new ResourceSetImpl();
+//		metamodelResourceSet.getResourceFactoryRegistry().
+//			getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
+//		Resource metamodelResource = metamodelResourceSet.getResource(
+//			URI.createURI(new File("simpledsl.ecore").toURI().toString()), true);
+//		metamodelResource.load(null);
+//		EPackage metamodelEPackage = (EPackage) metamodelResource.getContents().get(0);
+//		
+//		// Set up the model resource
+//		ResourceSet modelResourceSet = new ResourceSetImpl();
+//		modelResourceSet.getPackageRegistry().put(metamodelEPackage.getNsURI(), metamodelEPackage);
+//		modelResourceSet.getResourceFactoryRegistry().
+//			getExtensionToFactoryMap().put("*", new XmlResourceFactory());
+//		Resource modelResource = modelResourceSet.getResource(
+//				URI.createURI(new File("simpledsl.xml").toURI().toString()), true);
+//		modelResource.load(null);
+//		
+//		// Print the contents of the resource
+//		new ResourcePrinter().print(modelResource);
+//	}
 	
 	protected Stack<Object> stack = new Stack<Object>();
 	
