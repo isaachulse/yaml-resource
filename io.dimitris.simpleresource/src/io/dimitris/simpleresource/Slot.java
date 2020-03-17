@@ -1,5 +1,6 @@
 package io.dimitris.simpleresource;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 
@@ -28,6 +29,13 @@ public class Slot {
 	
 	public void setEReference(EReference eReference) {
 		this.eReference = eReference;
+	}
+	
+	@Override
+	public String toString() {
+		String eObjectName = ((EClass) eObject.eClass()).getName().toString();
+		String eReferenceName = eReference.getName();
+		return "Slot={" + eObjectName + " -> " + eReferenceName + "}";
 	}
 	
 }
