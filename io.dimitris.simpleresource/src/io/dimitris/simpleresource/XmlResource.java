@@ -91,11 +91,11 @@ public class XmlResource extends ResourceImpl {
 			// We get hold of the EReference of its EClass with that name
 			EReference eReference = (EReference) eObject.eClass().getEStructuralFeature(element.getName());
 			// We don't create any new EObjects at this stage; just put a "slot" containing the EObject and the EReference in the stack
-			stack.push(new Slot(eObject, eReference));
+			stack.push(new EReferenceSlot(eObject, eReference));
 		}
-		else if (stack.peek() instanceof Slot) { // If the top element of the stack is a slot, the current element is an EObject that should be added to the values of that slot
+		else if (stack.peek() instanceof EReferenceSlot) { // If the top element of the stack is a slot, the current element is an EObject that should be added to the values of that slot
 			// We get hold of the slot, and the EReference and EObject it encapsulates
-			Slot slot = (Slot) stack.peek();
+			EReferenceSlot slot = (EReferenceSlot) stack.peek();
 			EReference eReference = slot.getEReference();
 			EObject eObject = slot.getEObject();
 			
