@@ -31,7 +31,7 @@ public class YamlResource extends ResourceImpl {
 	protected YamlElement currentElement = null;
 
 	public static void main(String[] args) throws Exception {
-
+			
 		// load metamodel
 		ResourceSet metamodelResourceSet = new ResourceSetImpl();
 		metamodelResourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("*",
@@ -261,18 +261,18 @@ public class YamlResource extends ResourceImpl {
 		System.out.println("END -> Stack is " + Utilities.formatStack(stack));
 		System.out.println();
 
-		// process child elements
-		if (yamlElement instanceof YamlObject && ((YamlObject) yamlElement).hasChildren()) {
-			Map<String, YamlElement> children = ((YamlObject) yamlElement).getChildren();
-
-			for (Entry<String, YamlElement> child : children.entrySet()) {
-				process(child.getValue());
-			}
-		}
+//		// process child elements
+//		if (yamlElement instanceof YamlObject && ((YamlObject) yamlElement).hasChildren()) {
+//			Map<String, YamlElement> children = ((YamlObject) yamlElement).getChildren();
+//
+//			for (Entry<String, YamlElement> child : children.entrySet()) {
+//				process(child.getValue());
+//			}
+//		}
 
 		// pop the top object of the stack at the end
 		if (!stack.isEmpty())
-			stack.pop();
+			System.out.println("Popped stack is: " + stack.pop());
 	}
 
 }
