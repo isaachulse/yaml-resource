@@ -17,21 +17,25 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.yaml.snakeyaml.Yaml;
 
 import io.dimitris.simpleresource.utils.ResourcePrinter;
 import io.dimitris.simpleresource.utils.Utilities;
 import io.dimitris.simpleresource.YamlModelDiscoverer;
+import io.dimitris.simpleresource.model.YamlArray;
 import io.dimitris.simpleresource.model.YamlElement;
 import io.dimitris.simpleresource.model.YamlObject;
+import io.dimitris.simpleresource.model.YamlPrimitive;
 
 public class YamlResource extends ResourceImpl {
 
 	protected YamlElement currentElement = null;
 
 	public static void main(String[] args) throws Exception {
-			
+
 		// load metamodel
 		ResourceSet metamodelResourceSet = new ResourceSetImpl();
 		metamodelResourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("*",
@@ -40,11 +44,6 @@ public class YamlResource extends ResourceImpl {
 				.getResource(URI.createURI(new File("simpledsl.ecore").toURI().toString()), true);
 		metamodelResource.load(null);
 		EPackage metamodelEPackage = (EPackage) metamodelResource.getContents().get(0);
-
-		// print metamodelResource
-		System.out.println("metamodelResource:");
-		ResourcePrinter.print(metamodelResource);
-		System.out.println();
 
 		// set up the model resource
 		ResourceSet modelResourceSet = new ResourceSetImpl();
@@ -56,9 +55,11 @@ public class YamlResource extends ResourceImpl {
 		// load modelResource
 		modelResource.load(null);
 
-		// print modelResource
-		System.out.println("modelResource:");
-		ResourcePrinter.print(modelResource);
+		System.out.println();
+
+		XMIResource r = new XMIResourceImpl();
+		r.getContents().addAll(modelResource.getContents());
+		r.save(System.out, null);
 	}
 
 	// persistent object stack
@@ -68,13 +69,6 @@ public class YamlResource extends ResourceImpl {
 		super(uri);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.emf.ecore.resource.impl.ResourceImpl#doLoad(java.io.InputStream,
-	 * java.util.Map)
-	 */
 	@Override
 	protected void doLoad(InputStream inputStream, Map<?, ?> options) throws IOException {
 
@@ -89,13 +83,6 @@ public class YamlResource extends ResourceImpl {
 		}
 	}
 
-	/**
-	 * Implementation of doLoad() method.
-	 * 
-	 * @param inputStream
-	 * @param options
-	 * @throws Exception
-	 */
 	public void doLoadImpl(InputStream inputStream, Map<?, ?> options) throws Exception {
 
 		// reset a few things
@@ -110,6 +97,7 @@ public class YamlResource extends ResourceImpl {
 		// wrap parsed yaml with custom YamlElement, YamlObject, YamlNull, YamlArray and
 		// YamlPrimitive classes, also, print a few things out
 		YamlObject yamlElement = (YamlObject) YamlModelDiscoverer.wrapYamlObject(document);
+
 		System.out.println("Start YAML Element is:");
 		ResourcePrinter.printYaml(yamlElement);
 		System.out.println("\n------------\n");
@@ -165,7 +153,9 @@ public class YamlResource extends ResourceImpl {
 					stack.push(eObject);
 
 					// remove top layer (process child element)
-					yamlElement = yamlObject.get(id);
+					YamlElement newyamlElement = yamlObject.get(id);
+
+					process(newyamlElement);
 
 				} else
 					throw new NonConformingException("No eClass named " + id);
@@ -176,10 +166,7 @@ public class YamlResource extends ResourceImpl {
 			// this element refers to one of the eReferences of its eClass
 
 			// currently only supports YamlObject @TODO
-			if (!(yamlElement instanceof YamlObject)) {
-				throw new NonConformingException("yamlElement is not a YamlObject");
-
-			} else {
+			if (yamlElement instanceof YamlObject) {
 
 				// get hold of the eObject thats at the top of the stack
 				EObject eObject = (EObject) stack.peek();
@@ -199,10 +186,18 @@ public class YamlResource extends ResourceImpl {
 
 						// put a EReferenceSlot containing the eObject and eReference on the stack
 						stack.push(new EReferenceSlot(eObject, eReference));
+
+						process(child.getValue());
 					}
+				}
+
+				else if (yamlElement instanceof YamlArray) {
+					System.out.println("array");
+
+				} else if (yamlElement instanceof YamlPrimitive) {
 
 				} else {
-					throw new NonConformingException("eObject has no eReferences");
+					throw new NonConformingException("not object, array or primitive?");
 				}
 
 			}
@@ -223,26 +218,38 @@ public class YamlResource extends ResourceImpl {
 
 			YamlObject yamlObject = (YamlObject) yamlElement;
 
-			// get name of eReference
-			String key = slot.eReference.getName();
+			// get name of element
+			String key = yamlObject.getIdentifier();
 
-			// gey yamlObject for eReference name
-			YamlObject eReferenceMatch = (YamlObject) yamlObject.get(key);
+			// get yamlObject for eReference name
+//			YamlObject eReferenceMatch = (YamlObject) yamlObject.get(key);
 
-			// find the eClass that matches the name of our current element
-			EClass valueEClass = (EClass) ePackage.getEClassifier(eReferenceMatch.getSingleName());
-
-			// create an instance of it (our new value for the slot)
-			EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
 
 			if (eReference.isMany()) {
+				YamlArray yamlArray = (YamlArray) yamlObject.get(key);
+
+				for (YamlElement yamlThing : yamlArray) {
+					EClass valueEClass = (EClass) ePackage.getEClassifier(key);
+					
+					// create an instance of it (our new value for the slot)
+					EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
+					
+
+				}
 
 				// if eReference is multi-valued, get hold of existing values and add our new
 				// value to them
 				Collection<Object> existingValues = (Collection<Object>) eObject.eGet(eReference);
 				existingValues.add(valueEObject);
+				existingValues.addAll(c)
 
 			} else {
+
+				// find the eClass that matches the name of our current element
+				EClass valueEClass = (EClass) ePackage.getEClassifier(key);
+				
+				// create an instance of it (our new value for the slot)
+				EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
 
 				// if eReference is single-valued, assign eReference to our new value
 				eObject.eSet(eReference, valueEObject);
@@ -251,6 +258,7 @@ public class YamlResource extends ResourceImpl {
 
 			// push the new object to the stack
 			stack.push(valueEObject);
+			process(yamlElement);
 
 		} else if (stack.peek() instanceof EAttributeSlot) {
 
@@ -270,6 +278,7 @@ public class YamlResource extends ResourceImpl {
 //			}
 //		}
 
+//		process(yamlElement);
 		// pop the top object of the stack at the end
 		if (!stack.isEmpty())
 			System.out.println("Popped stack is: " + stack.pop());
