@@ -1,7 +1,15 @@
 package io.dimitris.simpleresource.model;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public abstract class YamlElement {
 
+	public boolean hasAttributes() {
+		//TODO
+		return false;
+	}
+	
 	public boolean isYamlArray() {
 		return this instanceof YamlArray;
 	}
@@ -55,7 +63,13 @@ public abstract class YamlElement {
 	}
 	
 	public boolean hasChildren() {
+		// TODO
 		return true;
+	}
+	
+	public ArrayList<YamlElement> getChildren() {
+		// TODO
+		return new ArrayList<YamlElement>();
 	}
 
 }
