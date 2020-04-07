@@ -2,6 +2,8 @@ package io.dimitris.simpleresource.model;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class YamlElement {
 
@@ -71,5 +73,15 @@ public abstract class YamlElement {
 		// TODO
 		return new ArrayList<YamlElement>();
 	}
+	
+//	public Set keySet()  {
+//		Set<String> keySet = new HashSet<String>();
+//		
+//		for(YamlElement child: getChildren()) {
+//			keySet.add(child.getIdentifier());
+//		}
+
+	
+	
 
 }

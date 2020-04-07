@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Stack;
 
 import org.eclipse.emf.common.util.URI;
@@ -40,9 +43,13 @@ import io.dimitris.simpleresource.model.YamlPrimitive;
 
 public class YamlResource extends ResourceImpl {
 
+	protected static HashMap tempMap = new HashMap<String, String>(); 
+	
 	protected YamlElement currentElement = null;
 
 	public static void main(String[] args) throws Exception {
+		
+		tempMap.put("User", "users");
 
 		// load metamodel
 		ResourceSet metamodelResourceSet = new ResourceSetImpl();
@@ -53,6 +60,10 @@ public class YamlResource extends ResourceImpl {
 		metamodelResource.load(null);
 		EPackage metamodelEPackage = (EPackage) metamodelResource.getContents().get(0);
 
+		XMIResource t = new XMIResourceImpl();
+		t.getContents().addAll(metamodelResource.getContents());
+		t.save(System.out, null);
+		
 		// set up the model resource
 		ResourceSet modelResourceSet = new ResourceSetImpl();
 		modelResourceSet.getPackageRegistry().put(metamodelEPackage.getNsURI(), metamodelEPackage);
@@ -97,32 +108,73 @@ public class YamlResource extends ResourceImpl {
 		getContents().clear();
 		stack.clear();
 
-		// new yaml parser
 		Yaml yaml = new Yaml();
 		Object document = yaml.load(inputStream);
 
-		// wrap parsed yaml with custom YamlElement, YamlObject, YamlNull, YamlArray and
-		// YamlPrimitive classes, also, print a few things out
-		YamlObject yamlElement = (YamlObject) YamlModelDiscoverer.wrapYamlObject(document);
+		YamlElement yamlElement = YamlModelDiscoverer.wrapYamlObject(document);
 
-		// process the wrapped yaml
 		process(yamlElement);
 	}
 
 	protected void process(YamlElement yamlElement) throws Exception {
 
-		// get first resource in ePackage (should only be one) @TODO -> make this nicer?
 		EPackage ePackage = (EPackage) getResourceSet().getPackageRegistry().values().iterator().next();
 
-		if (stack.isEmpty()) { // first entry into process() loop
-			
-			processFirstTag(yamlElement, ePackage);
+		if (stack.isEmpty()) { // first entry into loop
 
-		} else if (stack.peek() == null && !yamlElement.hasAttributes()) { // if element has no attributes and only text (orphan
+			processFirstTag(yamlElement, ePackage);
 			
+			YamlElement child = ((YamlObject) yamlElement).getChild().getValue();
+			process(child);
+
+		} else if (stack.peek() instanceof EObject) {
+
+			EObject parent = (EObject) stack.peek();
+			System.out.println(parent);
+			System.out.println(yamlElement.getIdentifier());
+
+			if (false) { // no attrs, only text
+
+			// else if no attrs
+
+			} else { // got attributes
+				
+				String id = yamlElement.getIdentifier();
+				
+				EClass valueEClass = (EClass) ePackage.getEClassifier(id);
+				
+				EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
+				
+				String tempId = (String) tempMap.get(id);
+				EReference eReference = (EReference) parent.eClass().getEStructuralFeature(tempId);
+
+				
+				if (eReference.isMany()) { // multi-valued
+				
+					Collection<Object> existingValues = (Collection<Object>) parent.eGet(eReference);
+
+					existingValues.add(valueEObject);
+					
+					
+				} else { // single-valued
+					
+				}
+			}
+			
+
+		} else if (stack.peek() instanceof EReferenceSlot) {
+
+			// if single val
+
+			// else (multi val)
+
+		}
+
+		else if (stack.peek() == null && !yamlElement.hasAttributes()) { // if element has no attributes and only text
+																			// (orphan
+
 			// find parent's EClass attribute
-		
-			
+
 			if (yamlElement instanceof YamlObject) {
 
 				// get hold of the eObject thats at the top of the stack
@@ -181,16 +233,14 @@ public class YamlResource extends ResourceImpl {
 			// get yamlObject for eReference name
 //			YamlObject eReferenceMatch = (YamlObject) yamlObject.get(key);
 
-
 			if (eReference.isMany()) {
 				YamlArray yamlArray = (YamlArray) yamlObject.get(key);
 
 				for (YamlElement yamlThing : yamlArray) {
 					EClass valueEClass = (EClass) ePackage.getEClassifier(key);
-					
+
 					// create an instance of it (our new value for the slot)
 					EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
-					
 
 				}
 
@@ -204,7 +254,7 @@ public class YamlResource extends ResourceImpl {
 
 				// find the eClass that matches the name of our current element
 				EClass valueEClass = (EClass) ePackage.getEClassifier(key);
-				
+
 				// create an instance of it (our new value for the slot)
 				EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
 
@@ -222,7 +272,6 @@ public class YamlResource extends ResourceImpl {
 			// need to handle EAttributes here
 		}
 
-
 //		// process child elements
 //		if (yamlElement instanceof YamlObject && ((YamlObject) yamlElement).hasChildren()) {
 //			Map<String, YamlElement> children = ((YamlObject) yamlElement).getChildren();
@@ -237,8 +286,9 @@ public class YamlResource extends ResourceImpl {
 		if (!stack.isEmpty())
 			System.out.println("Popped stack is: " + stack.pop());
 	}
-	
+
 	protected void processFirstTag(YamlElement yamlElement, EPackage ePackage) throws NonConformingException {
+
 		// currently only support YamlObject as root element, other support later @TODO
 		if (yamlElement == null || !(yamlElement instanceof YamlObject)) {
 			throw new NonConformingException("Root object is null, or unsuported type");
@@ -251,18 +301,15 @@ public class YamlResource extends ResourceImpl {
 			String id = yamlObject.getIdentifier();
 			EClass eClass = (EClass) ePackage.getEClassifier(id);
 
-			if (eClass != null) { // if eclass actually exists
+			if (eClass != null) { // if eClass actually exists
 
-				
 				EObject eObject = ePackage.getEFactoryInstance().create(eClass); // instantiate EClass
 				getContents().add(eObject); // add to model
 
-				// add EObject to stack
-				stack.push(eObject);
+				stack.push(eObject); // add to stack
 
 			} else
 				throw new NonConformingException("No eClass named " + id);
 		}
 	}
-
 }
