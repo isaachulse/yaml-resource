@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public final class YamlArray extends YamlElement implements Iterable<YamlElement> {
-	private final List<YamlElement> elements;
+	public final List<YamlElement> elements; // TODO set back to private
 
 	public YamlArray() {
 		elements = new ArrayList<YamlElement>();
@@ -29,5 +29,10 @@ public final class YamlArray extends YamlElement implements Iterable<YamlElement
 
 	public YamlElement get(int i) {
 		return elements.get(i);
+	}
+	
+	@Override
+	public String getIdentifier() {
+		return elements.get(0).getIdentifier();
 	}
 }

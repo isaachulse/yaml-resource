@@ -43,13 +43,14 @@ import io.dimitris.simpleresource.model.YamlPrimitive;
 
 public class YamlResource extends ResourceImpl {
 
-	protected static HashMap tempMap = new HashMap<String, String>(); 
-	
+	protected static HashMap tempMap = new HashMap<String, String>();
+
 	protected YamlElement currentElement = null;
 
 	public static void main(String[] args) throws Exception {
-		
+
 		tempMap.put("User", "users");
+		tempMap.put("Mailbox", "mailbox");
 
 		// load metamodel
 		ResourceSet metamodelResourceSet = new ResourceSetImpl();
@@ -60,10 +61,10 @@ public class YamlResource extends ResourceImpl {
 		metamodelResource.load(null);
 		EPackage metamodelEPackage = (EPackage) metamodelResource.getContents().get(0);
 
-		XMIResource t = new XMIResourceImpl();
-		t.getContents().addAll(metamodelResource.getContents());
-		t.save(System.out, null);
-		
+//		XMIResource t = new XMIResourceImpl();
+//		t.getContents().addAll(metamodelResource.getContents());
+//		t.save(System.out, null);
+
 		// set up the model resource
 		ResourceSet modelResourceSet = new ResourceSetImpl();
 		modelResourceSet.getPackageRegistry().put(metamodelEPackage.getNsURI(), metamodelEPackage);
@@ -113,7 +114,24 @@ public class YamlResource extends ResourceImpl {
 
 		YamlElement yamlElement = YamlModelDiscoverer.wrapYamlObject(document);
 
-		process(yamlElement);
+		ArrayList nicelyOrderedList = new ArrayList<YamlElement>();
+		
+		YamlObject System = (YamlObject) yamlElement;
+		YamlElement User = ((YamlObject) System.get("System"));
+		YamlElement MailBox = ((YamlArray)User.getAsYamlObject().get("User")).get(0);
+
+		
+		nicelyOrderedList.add(System);
+		nicelyOrderedList.add(User);
+//		nicelyOrderedList.add(MailBox);
+		
+
+		for(Object thing: nicelyOrderedList.toArray()) {
+			process((YamlElement) thing);
+		}
+		
+//		traverseYaml(yamlElement);
+		
 	}
 
 	protected void process(YamlElement yamlElement) throws Exception {
@@ -123,9 +141,7 @@ public class YamlResource extends ResourceImpl {
 		if (stack.isEmpty()) { // first entry into loop
 
 			processFirstTag(yamlElement, ePackage);
-			
-			YamlElement child = ((YamlObject) yamlElement).getChild().getValue();
-			process(child);
+
 
 		} else if (stack.peek() instanceof EObject) {
 
@@ -135,32 +151,32 @@ public class YamlResource extends ResourceImpl {
 
 			if (false) { // no attrs, only text
 
-			// else if no attrs
+				// else if no attrs
 
 			} else { // got attributes
-				
+
 				String id = yamlElement.getIdentifier();
-				
+
 				EClass valueEClass = (EClass) ePackage.getEClassifier(id);
-				
+
 				EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
-				
+
 				String tempId = (String) tempMap.get(id);
 				EReference eReference = (EReference) parent.eClass().getEStructuralFeature(tempId);
 
-				
+				setAttributeValues(valueEObject, yamlElement);
 				if (eReference.isMany()) { // multi-valued
-				
+
 					Collection<Object> existingValues = (Collection<Object>) parent.eGet(eReference);
 
 					existingValues.add(valueEObject);
-					
-					
+
 				} else { // single-valued
-					
+					// TODO
 				}
+
+				stack.push(valueEObject);
 			}
-			
 
 		} else if (stack.peek() instanceof EReferenceSlot) {
 
@@ -170,121 +186,27 @@ public class YamlResource extends ResourceImpl {
 
 		}
 
-		else if (stack.peek() == null && !yamlElement.hasAttributes()) { // if element has no attributes and only text
-																			// (orphan
+	}
 
-			// find parent's EClass attribute
+	protected void traverseYaml(YamlElement element) throws Exception {
+		if (element instanceof YamlObject) {
 
-			if (yamlElement instanceof YamlObject) {
-
-				// get hold of the eObject thats at the top of the stack
-				EObject eObject = (EObject) stack.peek();
-
-				// get the name of all eReferences linking to this source
-				if (((YamlObject) yamlElement).hasChildren()) {
-					Map<String, YamlElement> children = ((YamlObject) yamlElement).getChildren();
-
-					// for each child eReference in children
-					for (Entry<String, YamlElement> child : children.entrySet()) {
-
-						// get name of eReference and value linked to it
-						String key = child.getKey();
-
-						// get hold of the eReference of its eClass with that name
-						EReference eReference = (EReference) eObject.eClass().getEStructuralFeature(key);
-
-						// put a EReferenceSlot containing the eObject and eReference on the stack
-						stack.push(new EReferenceSlot(eObject, eReference));
-
-						process(child.getValue());
-					}
-				}
-
-				else if (yamlElement instanceof YamlArray) {
-					System.out.println("array");
-
-				} else if (yamlElement instanceof YamlPrimitive) {
-
-				} else {
-					throw new NonConformingException("not object, array or primitive?");
-				}
+			YamlObject yamlObject = (YamlObject) element;
+			
+			for (Entry<String, YamlElement> key : yamlObject.entrySet()) {
+				traverseYaml(key.getValue());
+				process(yamlObject);
 
 			}
-
-		} else if (stack.peek() instanceof EReferenceSlot) {
-
-			// current element is an eObject that should be added to the values of slot
-
-			// get hold of the slot, and the eReference and eObject it encapsulates
-			EReferenceSlot slot = (EReferenceSlot) stack.peek();
-			EReference eReference = slot.getEReference();
-			EObject eObject = slot.getEObject();
-
-			// check that the eReference is a containment reference @TODO -> support
-			// non-containment
-			if (!eReference.isContainment() || !(yamlElement instanceof YamlObject))
-				throw new RuntimeException("can only handle containment references and YamlObjects at the moment");
-
-			YamlObject yamlObject = (YamlObject) yamlElement;
-
-			// get name of element
-			String key = yamlObject.getIdentifier();
-
-			// get yamlObject for eReference name
-//			YamlObject eReferenceMatch = (YamlObject) yamlObject.get(key);
-
-			if (eReference.isMany()) {
-				YamlArray yamlArray = (YamlArray) yamlObject.get(key);
-
-				for (YamlElement yamlThing : yamlArray) {
-					EClass valueEClass = (EClass) ePackage.getEClassifier(key);
-
-					// create an instance of it (our new value for the slot)
-					EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
-
-				}
-
-				// if eReference is multi-valued, get hold of existing values and add our new
-				// value to them
-				Collection<Object> existingValues = (Collection<Object>) eObject.eGet(eReference);
-//				existingValues.add(valueEObject);
-//				existingValues.addAll(c);
-
-			} else {
-
-				// find the eClass that matches the name of our current element
-				EClass valueEClass = (EClass) ePackage.getEClassifier(key);
-
-				// create an instance of it (our new value for the slot)
-				EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
-
-				// if eReference is single-valued, assign eReference to our new value
-				eObject.eSet(eReference, valueEObject);
-
+			
+		} else if (element instanceof YamlArray) {
+			
+			YamlArray yamlArray = (YamlArray) element;
+			
+			for (YamlElement yamlElement: yamlArray.getChildren()) {
+				traverseYaml(yamlElement);
 			}
-
-			// push the new object to the stack
-//			stack.push(valueEObject);
-//			process(yamlElement);
-
-		} else if (stack.peek() instanceof EAttributeSlot) {
-
-			// need to handle EAttributes here
 		}
-
-//		// process child elements
-//		if (yamlElement instanceof YamlObject && ((YamlObject) yamlElement).hasChildren()) {
-//			Map<String, YamlElement> children = ((YamlObject) yamlElement).getChildren();
-//
-//			for (Entry<String, YamlElement> child : children.entrySet()) {
-//				process(child.getValue());
-//			}
-//		}
-
-//		process(yamlElement);
-		// pop the top object of the stack at the end
-		if (!stack.isEmpty())
-			System.out.println("Popped stack is: " + stack.pop());
 	}
 
 	protected void processFirstTag(YamlElement yamlElement, EPackage ePackage) throws NonConformingException {
@@ -311,5 +233,9 @@ public class YamlResource extends ResourceImpl {
 			} else
 				throw new NonConformingException("No eClass named " + id);
 		}
+	}
+
+	protected void setAttributeValues(EObject valueEObject, YamlElement yamlElement) {
+		// TODO
 	}
 }

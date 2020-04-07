@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class YamlObject extends YamlElement {
-	private final ConcurrentHashMap<String, YamlElement> members = new ConcurrentHashMap<String, YamlElement>();
+	public final ConcurrentHashMap<String, YamlElement> members = new ConcurrentHashMap<String, YamlElement>(); // TODO set back to pr
 
 	public boolean hasChildren() {
 		return !this.members.isEmpty();
@@ -16,9 +16,9 @@ public final class YamlObject extends YamlElement {
 		return members.size();
 	}
 
-	public Map<String, YamlElement> getChildren() throws Exception {
-		return members;
-	}
+//	public Map<String, YamlElement> getChildren() throws Exception {
+//		return members;
+//	}
 
 	public Entry<String, YamlElement> getChild() {
 		return members.entrySet().iterator().next();
