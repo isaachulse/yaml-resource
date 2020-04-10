@@ -29,27 +29,21 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
 import org.yaml.snakeyaml.Yaml;
 
-import io.dimitris.simpleresource.YamlModelDiscoverer;
-import io.dimitris.simpleresource.model.YamlElement;
-import io.dimitris.simpleresource.model.YamlObject;
-
 public class YamlResource extends ResourceImpl {
 
 	protected static HashMap tempMap = new HashMap<String, String>();
-
-	protected YamlElement currentElement = null;
 
 	public static void main(String[] args) throws Exception {
 
 		tempMap.put("User", "users");
 		tempMap.put("Mailbox", "mailbox");
-
+		
 		// load metamodel
 		ResourceSet metamodelResourceSet = new ResourceSetImpl();
 		metamodelResourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("*",
 				new XMIResourceFactoryImpl());
 		Resource metamodelResource = metamodelResourceSet
-				.getResource(URI.createURI(new File("messaging.ecore").toURI().toString()), true);
+				.getResource(URI.createURI(new File("model/simpledsl.ecore").toURI().toString()), true);
 		metamodelResource.load(null);
 		EPackage metamodelEPackage = (EPackage) metamodelResource.getContents().get(0);
 
@@ -62,7 +56,7 @@ public class YamlResource extends ResourceImpl {
 		modelResourceSet.getPackageRegistry().put(metamodelEPackage.getNsURI(), metamodelEPackage);
 		modelResourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("yaml", new YamlResourceFactory());
 		Resource modelResource = modelResourceSet
-				.getResource(URI.createURI(new File("messaging.yaml").toURI().toString()), true);
+				.getResource(URI.createURI(new File("model/simpledsl.yaml").toURI().toString()), true);
 
 		// load modelResource
 		modelResource.load(null);
@@ -101,21 +95,17 @@ public class YamlResource extends ResourceImpl {
 		getContents().clear();
 		stack.clear();
 
-		Yaml yaml = new Yaml();
-		Object document = yaml.load(inputStream);
-
-		recursiveStackPusher(document);
+		recursiveStackPusher(new Yaml().load(inputStream));
 
 	}
 
 	protected void process(Entry<String, Object> element) throws Exception {
 
-		
 		String key = element.getKey();
 		Object value = element.getValue(); // may be null if this entry is an attribute
 
 		System.out.println("processing with key: " + key + " and value: " + value);
-		
+
 		EPackage ePackage = (EPackage) getResourceSet().getPackageRegistry().values().iterator().next();
 
 		if (stack.isEmpty()) { // first entry into loop
@@ -131,12 +121,14 @@ public class YamlResource extends ResourceImpl {
 				// else if no attrs
 
 			} else { // got attributes
+				
+				String tempId = (String) tempMap.get(key);
 
-				EClass valueEClass = (EClass) ePackage.getEClassifier(key);
+				EClass valueEClass = (EClass) ePackage.getEClassifier(tempId); 
 
+				System.out.println("now here, eclass is: " + valueEClass);
 				EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
 
-				String tempId = (String) tempMap.get(key);
 				EReference eReference = (EReference) parent.eClass().getEStructuralFeature(tempId);
 
 				setAttributeValues(valueEObject, element);
@@ -160,16 +152,16 @@ public class YamlResource extends ResourceImpl {
 			// else (multi val)
 
 		}
-		
+
 		System.out.println("Stack is: " + stack);
 
 	}
 
-	protected void processFirstTag(Entry<String, Object> element, EPackage ePackage) throws NonConformingException {
+	protected void processFirstTag(Entry<String, Object> element, EPackage ePackage) throws Exception {
 
 		// currently only support YamlObject as root element, other support later @TODO
 		if (element.getValue() == null || !(element.getValue() instanceof Map)) {
-			throw new NonConformingException("Root object is null, or unsuported type");
+			throw new Exception("Root object is null, or unsuported type");
 
 		} else {
 
@@ -184,7 +176,7 @@ public class YamlResource extends ResourceImpl {
 				stack.push(eObject); // add to stack
 
 			} else
-				throw new NonConformingException("No eClass named " + element.getKey());
+				throw new Exception("No eClass named " + element.getKey());
 		}
 	}
 
@@ -195,7 +187,7 @@ public class YamlResource extends ResourceImpl {
 	// TESTING GROUND DOWN HERE, PROCEED WITH CAUTION
 
 	protected void recursiveStackPusher(Object element) throws Exception {
-		
+
 		if (element instanceof Map) {
 			for (Map.Entry<String, Object> entry : ((Map<String, Object>) element).entrySet()) {
 				System.out.println("iterating with key: " + entry.getKey() + " and value: " + entry.getValue());
