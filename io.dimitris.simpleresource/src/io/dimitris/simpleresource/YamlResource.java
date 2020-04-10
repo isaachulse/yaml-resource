@@ -4,25 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.Stack;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
@@ -31,18 +27,11 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.yaml.snakeyaml.Yaml;
 
-import io.dimitris.simpleresource.utils.ResourcePrinter;
-import io.dimitris.simpleresource.utils.Utilities;
 import io.dimitris.simpleresource.YamlModelDiscoverer;
-import io.dimitris.simpleresource.model.YamlArray;
 import io.dimitris.simpleresource.model.YamlElement;
 import io.dimitris.simpleresource.model.YamlObject;
-import io.dimitris.simpleresource.model.YamlPrimitive;
 
 public class YamlResource extends ResourceImpl {
 
@@ -64,9 +53,9 @@ public class YamlResource extends ResourceImpl {
 		metamodelResource.load(null);
 		EPackage metamodelEPackage = (EPackage) metamodelResource.getContents().get(0);
 
-//		XMIResource t = new XMIResourceImpl();
-//		t.getContents().addAll(metamodelResource.getContents());
-//		t.save(System.out, null);
+		XMIResource t = new XMIResourceImpl();
+		t.getContents().addAll(metamodelResource.getContents());
+		t.save(System.out, null);
 
 		// set up the model resource
 		ResourceSet modelResourceSet = new ResourceSetImpl();
@@ -115,35 +104,17 @@ public class YamlResource extends ResourceImpl {
 		Yaml yaml = new Yaml();
 		Object document = yaml.load(inputStream);
 
-		YamlElement yamlElement = YamlModelDiscoverer.wrapYamlObject(document);
+		recursiveStackPusher(document);
 
-		ArrayList nicelyOrderedList = new ArrayList<YamlElement>();
-		
-//		YamlObject system = (YamlObject) yamlElement;
-//		YamlElement user = ((YamlObject) System.get("System"));
-//		YamlElement mailBox = ((YamlArray)User.getAsYamlObject().get("User")).get(0);
-
-		
-//		nicelyOrderedList.add(system);
-//		nicelyOrderedList.add(user);
-//		nicelyOrderedList.add(MailBox);
-		
-
-		iterateRecursively((Map<String, Object>) document);
-		
-		System.out.println(stack);
-		
-		for(Object thing: nicelyOrderedList.toArray()) {
-			process((YamlElement) thing);
-		}
-		
-//		traverseYaml(yamlElement);
-		
 	}
 
-	protected void process(YamlElement element) throws Exception {
+	protected void process(Entry<String, Object> element) throws Exception {
 
-	
+		
+		String key = element.getKey();
+		Object value = element.getValue(); // may be null if this entry is an attribute
+
+		System.out.println("processing with key: " + key + " and value: " + value);
 		
 		EPackage ePackage = (EPackage) getResourceSet().getPackageRegistry().values().iterator().next();
 
@@ -151,12 +122,9 @@ public class YamlResource extends ResourceImpl {
 
 			processFirstTag(element, ePackage);
 
-
 		} else if (stack.peek() instanceof EObject) {
 
 			EObject parent = (EObject) stack.peek();
-			System.out.println(parent);
-			System.out.println(element.getIdentifier());
 
 			if (false) { // no attrs, only text
 
@@ -164,13 +132,11 @@ public class YamlResource extends ResourceImpl {
 
 			} else { // got attributes
 
-				String id = element.getIdentifier();
-
-				EClass valueEClass = (EClass) ePackage.getEClassifier(id);
+				EClass valueEClass = (EClass) ePackage.getEClassifier(key);
 
 				EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
 
-				String tempId = (String) tempMap.get(id);
+				String tempId = (String) tempMap.get(key);
 				EReference eReference = (EReference) parent.eClass().getEStructuralFeature(tempId);
 
 				setAttributeValues(valueEObject, element);
@@ -194,22 +160,21 @@ public class YamlResource extends ResourceImpl {
 			// else (multi val)
 
 		}
+		
+		System.out.println("Stack is: " + stack);
 
 	}
 
-	protected void processFirstTag(YamlElement yamlElement, EPackage ePackage) throws NonConformingException {
+	protected void processFirstTag(Entry<String, Object> element, EPackage ePackage) throws NonConformingException {
 
 		// currently only support YamlObject as root element, other support later @TODO
-		if (yamlElement == null || !(yamlElement instanceof YamlObject)) {
+		if (element.getValue() == null || !(element.getValue() instanceof Map)) {
 			throw new NonConformingException("Root object is null, or unsuported type");
 
 		} else {
 
-			YamlObject yamlObject = (YamlObject) yamlElement;
-
 			// get name of first object
-			String id = yamlObject.getIdentifier();
-			EClass eClass = (EClass) ePackage.getEClassifier(id);
+			EClass eClass = (EClass) ePackage.getEClassifier(element.getKey());
 
 			if (eClass != null) { // if eClass actually exists
 
@@ -219,51 +184,32 @@ public class YamlResource extends ResourceImpl {
 				stack.push(eObject); // add to stack
 
 			} else
-				throw new NonConformingException("No eClass named " + id);
+				throw new NonConformingException("No eClass named " + element.getKey());
 		}
 	}
 
-	protected void setAttributeValues(EObject valueEObject, YamlElement yamlElement) {
+	protected void setAttributeValues(EObject valueEObject, Entry<String, Object> element) {
 		// TODO
 	}
-	
+
 	// TESTING GROUND DOWN HERE, PROCEED WITH CAUTION
-	
-	protected void iterateRecursively(Map<String, Object> map) throws ParseException {
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
-			String key = entry.getKey();
-			Object value = entry.getValue();
 
-			if (value instanceof Map) {
-				stack.push(key);
-				iterateRecursively((Map<String, Object>) value);
-			} else if (value instanceof ArrayList) {
-				stack.push(key);
-				iterateArrayList((ArrayList<Object>) value);
-			} else if (value instanceof String) {
-				stack.push(key);
-			} else {
-				throw new IllegalArgumentException(String.valueOf(value));
+	protected void recursiveStackPusher(Object element) throws Exception {
+		
+		if (element instanceof Map) {
+			for (Map.Entry<String, Object> entry : ((Map<String, Object>) element).entrySet()) {
+				System.out.println("iterating with key: " + entry.getKey() + " and value: " + entry.getValue());
+
+				process(entry);
+				recursiveStackPusher(entry.getValue());
 			}
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	protected void iterateArrayList(ArrayList<Object> arrayList) throws ParseException {
-		ListIterator<Object> listIterator = arrayList.listIterator();
-
-		while (listIterator.hasNext()) {
-			Object current = listIterator.next();
-			if (current instanceof Map) {
-				
-				Map<String, Object> value = ((Map<String, Object>) current).
-				iterateRecursively((Map<String, Object>) current);
-			} else if (current instanceof ArrayList) {
-				stack.push(key);
-				iterateArrayList((ArrayList<Object>) value);
-			} else {
-				throw new IllegalArgumentException(String.valueOf(current));
+		} else if (element instanceof List) {
+			ListIterator<Object> listIterator = ((ArrayList<Object>) element).listIterator();
+			while (listIterator.hasNext()) {
+				recursiveStackPusher(listIterator.next());
 			}
+		} else {
+			process((Entry<String, Object>) new AbstractMap.SimpleEntry<String, Object>(element.toString(), null));
 		}
 	}
 }
