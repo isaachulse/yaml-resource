@@ -15,10 +15,12 @@ import java.util.Map.Entry;
 import java.util.Stack;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
@@ -31,14 +33,9 @@ import org.yaml.snakeyaml.Yaml;
 
 public class YamlResource extends ResourceImpl {
 
-	protected static HashMap tempMap = new HashMap<String, String>();
-
 	public static void main(String[] args) throws Exception {
 
-		tempMap.put("User", "users");
-		tempMap.put("Mailbox", "mailbox");
-		
-		// load metamodel
+		// load meta-model
 		ResourceSet metamodelResourceSet = new ResourceSetImpl();
 		metamodelResourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("*",
 				new XMIResourceFactoryImpl());
@@ -50,6 +47,8 @@ public class YamlResource extends ResourceImpl {
 		XMIResource t = new XMIResourceImpl();
 		t.getContents().addAll(metamodelResource.getContents());
 		t.save(System.out, null);
+
+		System.out.println();
 
 		// set up the model resource
 		ResourceSet modelResourceSet = new ResourceSetImpl();
@@ -95,7 +94,10 @@ public class YamlResource extends ResourceImpl {
 		getContents().clear();
 		stack.clear();
 
-		recursiveStackPusher(new Yaml().load(inputStream));
+		// process the yaml
+		Object document = new Yaml().load(inputStream);
+		System.out.println(document);
+		recursiveStackPusher(document);
 
 	}
 
@@ -110,26 +112,34 @@ public class YamlResource extends ResourceImpl {
 
 		if (stack.isEmpty()) { // first entry into loop
 
+			System.out.println("first element");
+
 			processFirstTag(element, ePackage);
 
 		} else if (stack.peek() instanceof EObject) {
 
 			EObject parent = (EObject) stack.peek();
 
-			if (false) { // no attrs, only text
+			if (value == null) { // no attrs, only text
 
-				// else if no attrs
+				System.out.println("this element is an attribute");
+
+			} else if (!(value instanceof List)) { // else if no attrs
+
+				System.out.println("this element is a containment slot");
+
+				EReference eReference = (EReference) parent.eClass().getEStructuralFeature(key);
+				stack.push(new EReferenceSlot(parent, eReference));
 
 			} else { // got attributes
-				
-				String tempId = (String) tempMap.get(key);
 
-				EClass valueEClass = (EClass) ePackage.getEClassifier(tempId); 
+				System.out.println("this element is a model element (parent model)");
 
-				System.out.println("now here, eclass is: " + valueEClass);
+				EClass valueEClass = (EClass) ePackage.getEClassifier(key);
+
 				EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
 
-				EReference eReference = (EReference) parent.eClass().getEStructuralFeature(tempId);
+				EReference eReference = (EReference) parent.eClass().getEStructuralFeature(key);
 
 				setAttributeValues(valueEObject, element);
 				if (eReference.isMany()) { // multi-valued
@@ -139,7 +149,8 @@ public class YamlResource extends ResourceImpl {
 					existingValues.add(valueEObject);
 
 				} else { // single-valued
-					// TODO
+
+					parent.eSet(eReference, valueEObject);
 				}
 
 				stack.push(valueEObject);
@@ -147,13 +158,27 @@ public class YamlResource extends ResourceImpl {
 
 		} else if (stack.peek() instanceof EReferenceSlot) {
 
-			// if single val
+			System.out.println("model element (parent containment)");
 
-			// else (multi val)
+			EReferenceSlot slot = (EReferenceSlot) stack.peek();
 
+			EClass valueEClass = (EClass) ePackage.getEClassifier(key);
+
+			EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
+
+			setAttributeValues(valueEObject, element);
+
+			if (slot.getEReference().isMany()) { // multi-valued
+				Collection<Object> existingValues = (Collection<Object>) slot.getEObject().eGet(slot.getEReference());
+
+				existingValues.add(valueEObject);
+			} else { // single-valued
+				slot.getEObject().eSet(slot.getEReference(), valueEObject);
+
+			}
 		}
 
-		System.out.println("Stack is: " + stack);
+		System.out.println("Stack is: " + stack + "\n");
 
 	}
 
@@ -181,10 +206,18 @@ public class YamlResource extends ResourceImpl {
 	}
 
 	protected void setAttributeValues(EObject valueEObject, Entry<String, Object> element) {
-		// TODO
-	}
 
-	// TESTING GROUND DOWN HERE, PROCEED WITH CAUTION
+		EClass eClass = valueEObject.eClass();
+
+		List<EStructuralFeature> eStructuralFeatures = new ArrayList<>();
+		for (EStructuralFeature sf : eClass.getEAllStructuralFeatures()) {
+			if (sf.isChangeable() && (sf instanceof EAttribute
+					|| ((sf instanceof EReference) && !((EReference) sf).isContainment()))) {
+				eStructuralFeatures.add(sf);
+			}
+		}
+
+	}
 
 	protected void recursiveStackPusher(Object element) throws Exception {
 
