@@ -1,9 +1,9 @@
 University:
-  students:
-    Student:
-      - name: !!str Alice
-      - name: !!str Bob
-  staff:
-    Staff:
-      - name: !!str Colin
-      - name: !!str Diana
+   students:
+      Student:
+      -  name: Alice
+      -  name: Bob
+   staff:
+      Staff:
+      -  name: Colin
+      -  name: Diana

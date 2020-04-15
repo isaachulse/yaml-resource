@@ -3,11 +3,9 @@ package io.dimitris.simpleresource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -176,6 +174,8 @@ public class YamlResource extends ResourceImpl {
 				slot.getEObject().eSet(slot.getEReference(), valueEObject);
 
 			}
+
+			stack.push(valueEObject);
 		}
 
 		System.out.println("Stack is: " + stack + "\n");
@@ -207,6 +207,13 @@ public class YamlResource extends ResourceImpl {
 
 	protected void setAttributeValues(EObject valueEObject, Entry<String, Object> element) {
 
+		ArrayList attributes = (ArrayList) element.getValue();
+
+		Map newAttr = (Map) attributes.get(0);
+
+		if (attributes.isEmpty())
+			return;
+
 		EClass eClass = valueEObject.eClass();
 
 		List<EStructuralFeature> eStructuralFeatures = new ArrayList<>();
@@ -214,8 +221,12 @@ public class YamlResource extends ResourceImpl {
 			if (sf.isChangeable() && (sf instanceof EAttribute
 					|| ((sf instanceof EReference) && !((EReference) sf).isContainment()))) {
 				eStructuralFeatures.add(sf);
+				valueEObject.eSet(sf, newAttr.get(sf.getName()));
 			}
 		}
+
+		if (attributes.isEmpty() || eStructuralFeatures.size() == 0)
+			return;
 
 	}
 
@@ -234,7 +245,7 @@ public class YamlResource extends ResourceImpl {
 				recursiveStackPusher(listIterator.next());
 			}
 		} else {
-			process((Entry<String, Object>) new AbstractMap.SimpleEntry<String, Object>(element.toString(), null));
+			process(new AbstractMap.SimpleEntry<String, Object>(element.toString(), null));
 		}
 	}
 }
