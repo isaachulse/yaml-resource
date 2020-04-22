@@ -12,13 +12,10 @@ class User {
  
 class Mailbox {
   attr int quota;
-  val Message[*] incoming;
-  val Message[*] outgoing;
+  val Message[*] messages;
 }
  
 class Message {
   attr String subject;
   attr String body;
-  ref User from;
-  ref User[*] to;
 }

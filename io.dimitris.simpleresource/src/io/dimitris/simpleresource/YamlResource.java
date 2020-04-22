@@ -38,7 +38,7 @@ public class YamlResource extends ResourceImpl {
 		metamodelResourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("*",
 				new XMIResourceFactoryImpl());
 		Resource metamodelResource = metamodelResourceSet
-				.getResource(URI.createURI(new File("model/simpledsl.ecore").toURI().toString()), true);
+				.getResource(URI.createURI(new File("model/messaging.ecore").toURI().toString()), true);
 		metamodelResource.load(null);
 		EPackage metamodelEPackage = (EPackage) metamodelResource.getContents().get(0);
 
@@ -53,7 +53,7 @@ public class YamlResource extends ResourceImpl {
 		modelResourceSet.getPackageRegistry().put(metamodelEPackage.getNsURI(), metamodelEPackage);
 		modelResourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("yaml", new YamlResourceFactory());
 		Resource modelResource = modelResourceSet
-				.getResource(URI.createURI(new File("model/simpledsl.yaml").toURI().toString()), true);
+				.getResource(URI.createURI(new File("model/messaging.yaml").toURI().toString()), true);
 
 		// load modelResource
 		modelResource.load(null);
@@ -124,10 +124,18 @@ public class YamlResource extends ResourceImpl {
 
 			} else if (!(value instanceof List)) { // else if no attrs
 
-				System.out.println("this element is a containment slot");
+				System.out.println("this element is maybe a containment slot");
 
-				EReference eReference = (EReference) parent.eClass().getEStructuralFeature(key);
-				stack.push(new EReferenceSlot(parent, eReference));
+				try {
+					EReference eReference = (EReference) parent.eClass().getEStructuralFeature(key);
+					stack.push(new EReferenceSlot(parent, eReference));
+
+				} catch (ClassCastException cce) {
+					EAttribute eAttribute = (EAttribute) parent.eClass().getEStructuralFeature(key);
+					System.out.println("got a eattr: " + key + "eattr is: " + eAttribute);
+
+					setAttributeValue(parent, element);
+				}
 
 			} else { // got attributes
 
@@ -139,7 +147,7 @@ public class YamlResource extends ResourceImpl {
 
 				EReference eReference = (EReference) parent.eClass().getEStructuralFeature(key);
 
-				setAttributeValues(valueEObject, element);
+				setAttributeValue(valueEObject, element);
 				if (eReference.isMany()) { // multi-valued
 
 					Collection<Object> existingValues = (Collection<Object>) parent.eGet(eReference);
@@ -164,7 +172,7 @@ public class YamlResource extends ResourceImpl {
 
 			EObject valueEObject = ePackage.getEFactoryInstance().create(valueEClass);
 
-			setAttributeValues(valueEObject, element);
+			setAttributeValue(valueEObject, element);
 
 			if (slot.getEReference().isMany()) { // multi-valued
 				Collection<Object> existingValues = (Collection<Object>) slot.getEObject().eGet(slot.getEReference());
@@ -205,33 +213,35 @@ public class YamlResource extends ResourceImpl {
 		}
 	}
 
-	protected void setAttributeValues(EObject valueEObject, Entry<String, Object> element) {
+	protected void setAttributeValue(EObject eObject, Entry<String, Object> element) {
 
-		ArrayList attributes = (ArrayList) element.getValue();
-
-		Map newAttr = (Map) attributes.get(0);
-
-		if (attributes.isEmpty())
-			return;
-
-		EClass eClass = valueEObject.eClass();
+		String key = element.getKey();
+		Object value = element.getValue();
+		EClass eClass = eObject.eClass();
 
 		List<EStructuralFeature> eStructuralFeatures = new ArrayList<>();
+
 		for (EStructuralFeature sf : eClass.getEAllStructuralFeatures()) {
 			if (sf.isChangeable() && (sf instanceof EAttribute
 					|| ((sf instanceof EReference) && !((EReference) sf).isContainment()))) {
 				eStructuralFeatures.add(sf);
-				valueEObject.eSet(sf, newAttr.get(sf.getName()));
+
+				if (sf.getName().equals(key)) {
+					eObject.eSet(sf, value);
+				}
+
 			}
 		}
 
-		if (attributes.isEmpty() || eStructuralFeatures.size() == 0)
-			return;
+//		if (attributes.isEmpty() || eStructuralFeatures.size() == 0)
+//			return;
 
 	}
 
 	protected void recursiveStackPusher(Object element) throws Exception {
 
+		System.out.println("element is " + element);
+		
 		if (element instanceof Map) {
 			for (Map.Entry<String, Object> entry : ((Map<String, Object>) element).entrySet()) {
 				System.out.println("iterating with key: " + entry.getKey() + " and value: " + entry.getValue());
@@ -245,7 +255,7 @@ public class YamlResource extends ResourceImpl {
 				recursiveStackPusher(listIterator.next());
 			}
 		} else {
-			process(new AbstractMap.SimpleEntry<String, Object>(element.toString(), null));
+//			process(new AbstractMap.SimpleEntry<String, Object>(element.toString(), null));
 		}
 	}
 }

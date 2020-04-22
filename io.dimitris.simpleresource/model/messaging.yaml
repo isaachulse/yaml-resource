@@ -1,19 +1,12 @@
 System: 
- User: 
-  - 
-   mailbox: 
-    outgoing: 
-     message: 
-      body: "Fuzzy parsing is so cool"
-      from: mary
-      subject: "Hello Tom"
-    quota: 15
-   name: tom
-  - 
-   mailbox: 
-    outgoing: 
-     message: 
-      to: "tom, mary"
-      subject: "Hello everyone"
-    quota: 20
-   name: mary
+  users:
+    User:
+      - name: tom
+      - mailbox: 
+         Mailbox:
+           - quota: 15
+           - messages:
+              Message:
+               - subject: "Hello Tom"
+               - body: "woo"
+           

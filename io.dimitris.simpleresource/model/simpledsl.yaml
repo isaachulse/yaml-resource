@@ -2,8 +2,6 @@ University:
    students:
       Student:
       -  name: Alice
-      -  name: Bob
    staff:
       Staff:
       -  name: Colin
-      -  name: Diana
