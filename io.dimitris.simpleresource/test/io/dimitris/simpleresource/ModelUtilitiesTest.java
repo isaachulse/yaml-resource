@@ -6,47 +6,30 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class YamlResourceTest {
+class ModelUtilitiesTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-	 
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
+	}
+
+	@Test
+	void testLoadMetaModel() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetModelResource() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testFormatResource() {
 		
-	}
-
-	@Test
-	void testDoLoadInputStreamMapOfQQ() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testDoLoadImpl() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testProcess() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testProcessFirstTag() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testSetAttributeValue() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRecursiveProcessor() {
-		fail("Not yet implemented");
-		
+		new ModelUtilities().formatResource(null);
 	}
 
 }

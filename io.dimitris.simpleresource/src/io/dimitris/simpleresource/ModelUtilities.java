@@ -1,7 +1,11 @@
 package io.dimitris.simpleresource;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -40,15 +44,24 @@ public class ModelUtilities {
 		return modelResource;
 	}
 
-	protected void printResource(EList<EObject> eObjects) {
+	protected String formatResource(EList<EObject> eObjects) {
 		XMIResource resource = new XMIResourceImpl();
 		resource.getContents().addAll(eObjects);
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+		PrintStream old = System.out;
+		System.setOut(ps);
 
 		try {
 			resource.save(System.out, null);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.flush();
+		System.setOut(old);
+
+		return baos.toString();
 	}
 
 }

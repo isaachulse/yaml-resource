@@ -22,13 +22,13 @@ public class Main {
 
 		EPackage metaModel = (EPackage) eObjects.get(0);
 
-		modelUtilities.printResource(eObjects);
+		System.out.println(modelUtilities.formatResource(eObjects));
 
 		Resource modelResource = modelUtilities.getModelResource(metaModel, modelName);
 
 		modelResource.load(null);
 
-		modelUtilities.printResource(modelResource.getContents());
+		System.out.println(modelUtilities.formatResource(modelResource.getContents()));
 
 	}
 
