@@ -1,9 +1,7 @@
 package io.dimitris.simpleresource;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,51 +17,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.XMIResource;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-
 import org.yaml.snakeyaml.Yaml;
 
 public class YamlResource extends ResourceImpl {
-
-	public static void main(String[] args) throws Exception {
-
-		// load meta-model
-		ResourceSet metamodelResourceSet = new ResourceSetImpl();
-		metamodelResourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("*",
-				new XMIResourceFactoryImpl());
-		Resource metamodelResource = metamodelResourceSet
-				.getResource(URI.createURI(new File("model/messaging.ecore").toURI().toString()), true);
-		metamodelResource.load(null);
-		EPackage metamodelEPackage = (EPackage) metamodelResource.getContents().get(0);
-
-		XMIResource t = new XMIResourceImpl();
-		t.getContents().addAll(metamodelResource.getContents());
-		t.save(System.out, null);
-
-		System.out.println();
-
-		// set up the model resource
-		ResourceSet modelResourceSet = new ResourceSetImpl();
-		modelResourceSet.getPackageRegistry().put(metamodelEPackage.getNsURI(), metamodelEPackage);
-		modelResourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("yaml", new YamlResourceFactory());
-		Resource modelResource = modelResourceSet
-				.getResource(URI.createURI(new File("model/messaging.yaml").toURI().toString()), true);
-
-		// load modelResource
-		modelResource.load(null);
-
-		System.out.println();
-
-		XMIResource r = new XMIResourceImpl();
-		r.getContents().addAll(modelResource.getContents());
-		r.save(System.out, null);
-	}
 
 	// persistent object stack
 	private Stack<Object> stack = new Stack<Object>();
@@ -94,8 +51,10 @@ public class YamlResource extends ResourceImpl {
 
 		// process the yaml
 		Object document = new Yaml().load(inputStream);
-		System.out.println(document);
-		recursiveStackPusher(document);
+
+		System.out.println("Document is: " + document);
+
+		recursiveProcessor(document);
 
 	}
 
@@ -232,29 +191,24 @@ public class YamlResource extends ResourceImpl {
 
 			}
 		}
-
-//		if (attributes.isEmpty() || eStructuralFeatures.size() == 0)
-//			return;
-
 	}
 
-	protected void recursiveStackPusher(Object element) throws Exception {
+	protected void recursiveProcessor(Object element) throws Exception {
 
-		System.out.println("element is " + element);
-		
 		if (element instanceof Map) {
 			for (Map.Entry<String, Object> entry : ((Map<String, Object>) element).entrySet()) {
-				System.out.println("iterating with key: " + entry.getKey() + " and value: " + entry.getValue());
-
 				process(entry);
-				recursiveStackPusher(entry.getValue());
+				recursiveProcessor(entry.getValue());
 			}
+
 		} else if (element instanceof List) {
 			ListIterator<Object> listIterator = ((ArrayList<Object>) element).listIterator();
 			while (listIterator.hasNext()) {
-				recursiveStackPusher(listIterator.next());
+				recursiveProcessor(listIterator.next());
 			}
+
 		} else {
+			// do nothing, currently
 //			process(new AbstractMap.SimpleEntry<String, Object>(element.toString(), null));
 		}
 	}
