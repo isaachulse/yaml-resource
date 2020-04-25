@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Stack;
 
 import org.eclipse.emf.common.util.URI;
@@ -55,6 +57,10 @@ public class YamlResource extends ResourceImpl {
 		System.out.println("Document is: " + document);
 
 		recursiveProcessor(document);
+
+		while (!processQueue.isEmpty()) {
+			process(processQueue.poll());
+		}
 
 	}
 
@@ -193,11 +199,13 @@ public class YamlResource extends ResourceImpl {
 		}
 	}
 
+	protected Queue<Entry<String, Object>> processQueue = new LinkedList<Entry<String, Object>>();
+
 	protected void recursiveProcessor(Object element) throws Exception {
 
 		if (element instanceof Map) {
 			for (Map.Entry<String, Object> entry : ((Map<String, Object>) element).entrySet()) {
-				process(entry);
+				processQueue.add(entry);
 				recursiveProcessor(entry.getValue());
 			}
 
@@ -208,6 +216,7 @@ public class YamlResource extends ResourceImpl {
 			}
 
 		} else {
+			System.out.println("doing nothigns");
 			// do nothing, currently
 //			process(new AbstractMap.SimpleEntry<String, Object>(element.toString(), null));
 		}

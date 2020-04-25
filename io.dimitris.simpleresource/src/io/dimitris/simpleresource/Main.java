@@ -30,6 +30,9 @@ public class Main {
 
 		System.out.println(modelUtilities.formatResource(modelResource.getContents()));
 
+		
+		System.out.println("stack is:");
+		
 	}
 
 }

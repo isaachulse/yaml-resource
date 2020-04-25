@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/snakeyaml-1.25.jar"/>
 	<classpathentry kind="lib" path="lib/jmockit.jar"/>
 	<classpathentry kind="lib" path="lib/junit-tools.jar"/>
+	<classpathentry kind="lib" path="lib/mockito-core-3.3.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
