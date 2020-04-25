@@ -1,1 +1,1 @@
-# simpleresource
+# yaml-resource
