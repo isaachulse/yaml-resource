@@ -1,4 +1,4 @@
-package io.dimitris.simpleresource;
+package com.isaachulse.yamlresource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +28,7 @@ class ModelUtilitiesTest {
 
 	@Test
 	void testFormatResource() {
-		
+
 		new ModelUtilities().formatResource(null);
 	}
 

@@ -1,4 +1,4 @@
-package io.dimitris.simpleresource;
+package com.isaachulse.yamlresource;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;

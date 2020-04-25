@@ -1,4 +1,4 @@
-package io.dimitris.simpleresource;
+package com.isaachulse.yamlresource;
 
 import java.io.IOException;
 import java.io.InputStream;

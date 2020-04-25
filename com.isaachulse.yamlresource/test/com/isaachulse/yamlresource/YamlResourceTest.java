@@ -1,4 +1,4 @@
-package io.dimitris.simpleresource;
+package com.isaachulse.yamlresource;
 
 import org.mockito.*;
 
@@ -30,7 +30,7 @@ class YamlResourceTest {
 //
 //	@AfterEach
 //	void tearDown() throws Exception {
-//		
+//
 //	}
 //
 //	@Test

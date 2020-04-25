@@ -1,4 +1,4 @@
-package io.dimitris.simpleresource;
+package com.isaachulse.yamlresource;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -30,9 +30,9 @@ public class Main {
 
 		System.out.println(modelUtilities.formatResource(modelResource.getContents()));
 
-		
+
 		System.out.println("stack is:");
-		
+
 	}
 
 }
