@@ -1,0 +1,7 @@
+University:
+   students:
+      Student:
+      -  name: Alice
+   staff:
+      Staff:
+      -  name: Colin

@@ -1,0 +1,12 @@
+System: 
+  users:
+    User:
+      - name: tom
+      - mailbox: 
+         Mailbox:
+           - quota: 15
+           - messages:
+              Message:
+               - subject: "Hello Tom"
+               - body: "woo"
+           

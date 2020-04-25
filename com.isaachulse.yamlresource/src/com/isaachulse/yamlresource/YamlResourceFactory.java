@@ -1,13 +1,13 @@
-package io.dimitris.simpleresource;
+package com.isaachulse.yamlresource;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 
-public class XmlResourceFactory extends ResourceFactoryImpl {
-	
+public class YamlResourceFactory extends ResourceFactoryImpl {
+
 	@Override
 	public Resource createResource(URI uri) {
-		return new XmlResource(uri);
+		return new YamlResource(uri);
 	}
 }
