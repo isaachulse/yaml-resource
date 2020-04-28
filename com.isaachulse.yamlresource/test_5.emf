@@ -1,0 +1,27 @@
+@namespace(uri="test", prefix="")
+package test;
+
+class Test0 {
+	val Test1[*] test1;
+}
+
+class Test1 {
+	val Test2[*] test2;
+}
+
+class Test2 {
+	val Test3[*] test3;
+}
+
+class Test3 {
+	val Test4[*] test4;
+}
+
+class Test4 {
+	val Test5[*] test5;
+}
+
+class Test5 {
+attr String name;
+}
+

@@ -1,12 +1,12 @@
 System: 
   users:
     User:
-      - name: tom
+      - name: name1
       - mailbox: 
          Mailbox:
-           - quota: 15
+           - quota: 111
            - messages:
               Message:
-               - subject: "Hello Tom"
-               - body: "woo"
+               - subject: "subject1"
+               - body: "body1"
            

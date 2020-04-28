@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="test" nsURI="test" nsPrefix="">
+  <eClassifiers xsi:type="ecore:EClass" name="Test0">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test1" upperBound="-1"
+        eType="#//Test1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test1">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test2" upperBound="-1"
+        eType="#//Test2" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test2">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test3" upperBound="-1"
+        eType="#//Test3" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test3">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test4" upperBound="-1"
+        eType="#//Test4" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test4">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test5" upperBound="-1"
+        eType="#//Test5" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test5">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test6" upperBound="-1"
+        eType="#//Test6" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test6">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test7" upperBound="-1"
+        eType="#//Test7" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test7">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test8" upperBound="-1"
+        eType="#//Test8" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test8">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test9" upperBound="-1"
+        eType="#//Test9" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test9">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test10" upperBound="-1"
+        eType="#//Test10" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test10">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test11" upperBound="-1"
+        eType="#//Test11" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test11">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test12" upperBound="-1"
+        eType="#//Test12" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test12">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test13" upperBound="-1"
+        eType="#//Test13" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test13">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test14" upperBound="-1"
+        eType="#//Test14" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test14">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test15" upperBound="-1"
+        eType="#//Test15" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test15">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test16" upperBound="-1"
+        eType="#//Test16" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test16">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test17" upperBound="-1"
+        eType="#//Test17" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test17">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test18" upperBound="-1"
+        eType="#//Test18" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test18">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test19" upperBound="-1"
+        eType="#//Test19" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test19">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="test20" upperBound="-1"
+        eType="#//Test20" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Test20">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>
