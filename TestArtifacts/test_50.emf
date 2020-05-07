@@ -1,0 +1,207 @@
+@namespace(uri="test", prefix="")
+package test;
+
+class Test0 {
+	val Test1[*] test1;
+}
+
+class Test1 {
+	val Test2[*] test2;
+}
+
+class Test2 {
+	val Test3[*] test3;
+}
+
+class Test3 {
+	val Test4[*] test4;
+}
+
+class Test4 {
+	val Test5[*] test5;
+}
+
+class Test5 {
+	val Test6[*] test6;
+}
+
+class Test6 {
+	val Test7[*] test7;
+}
+
+class Test7 {
+	val Test8[*] test8;
+}
+
+class Test8 {
+	val Test9[*] test9;
+}
+
+class Test9 {
+	val Test10[*] test10;
+}
+
+class Test10 {
+	val Test11[*] test11;
+}
+
+class Test11 {
+	val Test12[*] test12;
+}
+
+class Test12 {
+	val Test13[*] test13;
+}
+
+class Test13 {
+	val Test14[*] test14;
+}
+
+class Test14 {
+	val Test15[*] test15;
+}
+
+class Test15 {
+	val Test16[*] test16;
+}
+
+class Test16 {
+	val Test17[*] test17;
+}
+
+class Test17 {
+	val Test18[*] test18;
+}
+
+class Test18 {
+	val Test19[*] test19;
+}
+
+class Test19 {
+	val Test20[*] test20;
+}
+
+class Test20 {
+	val Test21[*] test21;
+}
+
+class Test21 {
+	val Test22[*] test22;
+}
+
+class Test22 {
+	val Test23[*] test23;
+}
+
+class Test23 {
+	val Test24[*] test24;
+}
+
+class Test24 {
+	val Test25[*] test25;
+}
+
+class Test25 {
+	val Test26[*] test26;
+}
+
+class Test26 {
+	val Test27[*] test27;
+}
+
+class Test27 {
+	val Test28[*] test28;
+}
+
+class Test28 {
+	val Test29[*] test29;
+}
+
+class Test29 {
+	val Test30[*] test30;
+}
+
+class Test30 {
+	val Test31[*] test31;
+}
+
+class Test31 {
+	val Test32[*] test32;
+}
+
+class Test32 {
+	val Test33[*] test33;
+}
+
+class Test33 {
+	val Test34[*] test34;
+}
+
+class Test34 {
+	val Test35[*] test35;
+}
+
+class Test35 {
+	val Test36[*] test36;
+}
+
+class Test36 {
+	val Test37[*] test37;
+}
+
+class Test37 {
+	val Test38[*] test38;
+}
+
+class Test38 {
+	val Test39[*] test39;
+}
+
+class Test39 {
+	val Test40[*] test40;
+}
+
+class Test40 {
+	val Test41[*] test41;
+}
+
+class Test41 {
+	val Test42[*] test42;
+}
+
+class Test42 {
+	val Test43[*] test43;
+}
+
+class Test43 {
+	val Test44[*] test44;
+}
+
+class Test44 {
+	val Test45[*] test45;
+}
+
+class Test45 {
+	val Test46[*] test46;
+}
+
+class Test46 {
+	val Test47[*] test47;
+}
+
+class Test47 {
+	val Test48[*] test48;
+}
+
+class Test48 {
+	val Test49[*] test49;
+}
+
+class Test49 {
+	val Test50[*] test50;
+}
+
+class Test50 {
+attr String name;
+}
+

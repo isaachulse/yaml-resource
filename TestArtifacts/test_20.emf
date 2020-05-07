@@ -1,0 +1,87 @@
+@namespace(uri="test", prefix="")
+package test;
+
+class Test0 {
+	val Test1[*] test1;
+}
+
+class Test1 {
+	val Test2[*] test2;
+}
+
+class Test2 {
+	val Test3[*] test3;
+}
+
+class Test3 {
+	val Test4[*] test4;
+}
+
+class Test4 {
+	val Test5[*] test5;
+}
+
+class Test5 {
+	val Test6[*] test6;
+}
+
+class Test6 {
+	val Test7[*] test7;
+}
+
+class Test7 {
+	val Test8[*] test8;
+}
+
+class Test8 {
+	val Test9[*] test9;
+}
+
+class Test9 {
+	val Test10[*] test10;
+}
+
+class Test10 {
+	val Test11[*] test11;
+}
+
+class Test11 {
+	val Test12[*] test12;
+}
+
+class Test12 {
+	val Test13[*] test13;
+}
+
+class Test13 {
+	val Test14[*] test14;
+}
+
+class Test14 {
+	val Test15[*] test15;
+}
+
+class Test15 {
+	val Test16[*] test16;
+}
+
+class Test16 {
+	val Test17[*] test17;
+}
+
+class Test17 {
+	val Test18[*] test18;
+}
+
+class Test18 {
+	val Test19[*] test19;
+}
+
+class Test19 {
+	val Test20[*] test20;
+}
+
+class Test20 {
+attr String name;
+}
+

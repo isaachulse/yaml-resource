@@ -1,0 +1,807 @@
+@namespace(uri="test", prefix="")
+package test;
+
+class Test0 {
+	val Test1[*] test1;
+}
+
+class Test1 {
+	val Test2[*] test2;
+}
+
+class Test2 {
+	val Test3[*] test3;
+}
+
+class Test3 {
+	val Test4[*] test4;
+}
+
+class Test4 {
+	val Test5[*] test5;
+}
+
+class Test5 {
+	val Test6[*] test6;
+}
+
+class Test6 {
+	val Test7[*] test7;
+}
+
+class Test7 {
+	val Test8[*] test8;
+}
+
+class Test8 {
+	val Test9[*] test9;
+}
+
+class Test9 {
+	val Test10[*] test10;
+}
+
+class Test10 {
+	val Test11[*] test11;
+}
+
+class Test11 {
+	val Test12[*] test12;
+}
+
+class Test12 {
+	val Test13[*] test13;
+}
+
+class Test13 {
+	val Test14[*] test14;
+}
+
+class Test14 {
+	val Test15[*] test15;
+}
+
+class Test15 {
+	val Test16[*] test16;
+}
+
+class Test16 {
+	val Test17[*] test17;
+}
+
+class Test17 {
+	val Test18[*] test18;
+}
+
+class Test18 {
+	val Test19[*] test19;
+}
+
+class Test19 {
+	val Test20[*] test20;
+}
+
+class Test20 {
+	val Test21[*] test21;
+}
+
+class Test21 {
+	val Test22[*] test22;
+}
+
+class Test22 {
+	val Test23[*] test23;
+}
+
+class Test23 {
+	val Test24[*] test24;
+}
+
+class Test24 {
+	val Test25[*] test25;
+}
+
+class Test25 {
+	val Test26[*] test26;
+}
+
+class Test26 {
+	val Test27[*] test27;
+}
+
+class Test27 {
+	val Test28[*] test28;
+}
+
+class Test28 {
+	val Test29[*] test29;
+}
+
+class Test29 {
+	val Test30[*] test30;
+}
+
+class Test30 {
+	val Test31[*] test31;
+}
+
+class Test31 {
+	val Test32[*] test32;
+}
+
+class Test32 {
+	val Test33[*] test33;
+}
+
+class Test33 {
+	val Test34[*] test34;
+}
+
+class Test34 {
+	val Test35[*] test35;
+}
+
+class Test35 {
+	val Test36[*] test36;
+}
+
+class Test36 {
+	val Test37[*] test37;
+}
+
+class Test37 {
+	val Test38[*] test38;
+}
+
+class Test38 {
+	val Test39[*] test39;
+}
+
+class Test39 {
+	val Test40[*] test40;
+}
+
+class Test40 {
+	val Test41[*] test41;
+}
+
+class Test41 {
+	val Test42[*] test42;
+}
+
+class Test42 {
+	val Test43[*] test43;
+}
+
+class Test43 {
+	val Test44[*] test44;
+}
+
+class Test44 {
+	val Test45[*] test45;
+}
+
+class Test45 {
+	val Test46[*] test46;
+}
+
+class Test46 {
+	val Test47[*] test47;
+}
+
+class Test47 {
+	val Test48[*] test48;
+}
+
+class Test48 {
+	val Test49[*] test49;
+}
+
+class Test49 {
+	val Test50[*] test50;
+}
+
+class Test50 {
+	val Test51[*] test51;
+}
+
+class Test51 {
+	val Test52[*] test52;
+}
+
+class Test52 {
+	val Test53[*] test53;
+}
+
+class Test53 {
+	val Test54[*] test54;
+}
+
+class Test54 {
+	val Test55[*] test55;
+}
+
+class Test55 {
+	val Test56[*] test56;
+}
+
+class Test56 {
+	val Test57[*] test57;
+}
+
+class Test57 {
+	val Test58[*] test58;
+}
+
+class Test58 {
+	val Test59[*] test59;
+}
+
+class Test59 {
+	val Test60[*] test60;
+}
+
+class Test60 {
+	val Test61[*] test61;
+}
+
+class Test61 {
+	val Test62[*] test62;
+}
+
+class Test62 {
+	val Test63[*] test63;
+}
+
+class Test63 {
+	val Test64[*] test64;
+}
+
+class Test64 {
+	val Test65[*] test65;
+}
+
+class Test65 {
+	val Test66[*] test66;
+}
+
+class Test66 {
+	val Test67[*] test67;
+}
+
+class Test67 {
+	val Test68[*] test68;
+}
+
+class Test68 {
+	val Test69[*] test69;
+}
+
+class Test69 {
+	val Test70[*] test70;
+}
+
+class Test70 {
+	val Test71[*] test71;
+}
+
+class Test71 {
+	val Test72[*] test72;
+}
+
+class Test72 {
+	val Test73[*] test73;
+}
+
+class Test73 {
+	val Test74[*] test74;
+}
+
+class Test74 {
+	val Test75[*] test75;
+}
+
+class Test75 {
+	val Test76[*] test76;
+}
+
+class Test76 {
+	val Test77[*] test77;
+}
+
+class Test77 {
+	val Test78[*] test78;
+}
+
+class Test78 {
+	val Test79[*] test79;
+}
+
+class Test79 {
+	val Test80[*] test80;
+}
+
+class Test80 {
+	val Test81[*] test81;
+}
+
+class Test81 {
+	val Test82[*] test82;
+}
+
+class Test82 {
+	val Test83[*] test83;
+}
+
+class Test83 {
+	val Test84[*] test84;
+}
+
+class Test84 {
+	val Test85[*] test85;
+}
+
+class Test85 {
+	val Test86[*] test86;
+}
+
+class Test86 {
+	val Test87[*] test87;
+}
+
+class Test87 {
+	val Test88[*] test88;
+}
+
+class Test88 {
+	val Test89[*] test89;
+}
+
+class Test89 {
+	val Test90[*] test90;
+}
+
+class Test90 {
+	val Test91[*] test91;
+}
+
+class Test91 {
+	val Test92[*] test92;
+}
+
+class Test92 {
+	val Test93[*] test93;
+}
+
+class Test93 {
+	val Test94[*] test94;
+}
+
+class Test94 {
+	val Test95[*] test95;
+}
+
+class Test95 {
+	val Test96[*] test96;
+}
+
+class Test96 {
+	val Test97[*] test97;
+}
+
+class Test97 {
+	val Test98[*] test98;
+}
+
+class Test98 {
+	val Test99[*] test99;
+}
+
+class Test99 {
+	val Test100[*] test100;
+}
+
+class Test100 {
+	val Test101[*] test101;
+}
+
+class Test101 {
+	val Test102[*] test102;
+}
+
+class Test102 {
+	val Test103[*] test103;
+}
+
+class Test103 {
+	val Test104[*] test104;
+}
+
+class Test104 {
+	val Test105[*] test105;
+}
+
+class Test105 {
+	val Test106[*] test106;
+}
+
+class Test106 {
+	val Test107[*] test107;
+}
+
+class Test107 {
+	val Test108[*] test108;
+}
+
+class Test108 {
+	val Test109[*] test109;
+}
+
+class Test109 {
+	val Test110[*] test110;
+}
+
+class Test110 {
+	val Test111[*] test111;
+}
+
+class Test111 {
+	val Test112[*] test112;
+}
+
+class Test112 {
+	val Test113[*] test113;
+}
+
+class Test113 {
+	val Test114[*] test114;
+}
+
+class Test114 {
+	val Test115[*] test115;
+}
+
+class Test115 {
+	val Test116[*] test116;
+}
+
+class Test116 {
+	val Test117[*] test117;
+}
+
+class Test117 {
+	val Test118[*] test118;
+}
+
+class Test118 {
+	val Test119[*] test119;
+}
+
+class Test119 {
+	val Test120[*] test120;
+}
+
+class Test120 {
+	val Test121[*] test121;
+}
+
+class Test121 {
+	val Test122[*] test122;
+}
+
+class Test122 {
+	val Test123[*] test123;
+}
+
+class Test123 {
+	val Test124[*] test124;
+}
+
+class Test124 {
+	val Test125[*] test125;
+}
+
+class Test125 {
+	val Test126[*] test126;
+}
+
+class Test126 {
+	val Test127[*] test127;
+}
+
+class Test127 {
+	val Test128[*] test128;
+}
+
+class Test128 {
+	val Test129[*] test129;
+}
+
+class Test129 {
+	val Test130[*] test130;
+}
+
+class Test130 {
+	val Test131[*] test131;
+}
+
+class Test131 {
+	val Test132[*] test132;
+}
+
+class Test132 {
+	val Test133[*] test133;
+}
+
+class Test133 {
+	val Test134[*] test134;
+}
+
+class Test134 {
+	val Test135[*] test135;
+}
+
+class Test135 {
+	val Test136[*] test136;
+}
+
+class Test136 {
+	val Test137[*] test137;
+}
+
+class Test137 {
+	val Test138[*] test138;
+}
+
+class Test138 {
+	val Test139[*] test139;
+}
+
+class Test139 {
+	val Test140[*] test140;
+}
+
+class Test140 {
+	val Test141[*] test141;
+}
+
+class Test141 {
+	val Test142[*] test142;
+}
+
+class Test142 {
+	val Test143[*] test143;
+}
+
+class Test143 {
+	val Test144[*] test144;
+}
+
+class Test144 {
+	val Test145[*] test145;
+}
+
+class Test145 {
+	val Test146[*] test146;
+}
+
+class Test146 {
+	val Test147[*] test147;
+}
+
+class Test147 {
+	val Test148[*] test148;
+}
+
+class Test148 {
+	val Test149[*] test149;
+}
+
+class Test149 {
+	val Test150[*] test150;
+}
+
+class Test150 {
+	val Test151[*] test151;
+}
+
+class Test151 {
+	val Test152[*] test152;
+}
+
+class Test152 {
+	val Test153[*] test153;
+}
+
+class Test153 {
+	val Test154[*] test154;
+}
+
+class Test154 {
+	val Test155[*] test155;
+}
+
+class Test155 {
+	val Test156[*] test156;
+}
+
+class Test156 {
+	val Test157[*] test157;
+}
+
+class Test157 {
+	val Test158[*] test158;
+}
+
+class Test158 {
+	val Test159[*] test159;
+}
+
+class Test159 {
+	val Test160[*] test160;
+}
+
+class Test160 {
+	val Test161[*] test161;
+}
+
+class Test161 {
+	val Test162[*] test162;
+}
+
+class Test162 {
+	val Test163[*] test163;
+}
+
+class Test163 {
+	val Test164[*] test164;
+}
+
+class Test164 {
+	val Test165[*] test165;
+}
+
+class Test165 {
+	val Test166[*] test166;
+}
+
+class Test166 {
+	val Test167[*] test167;
+}
+
+class Test167 {
+	val Test168[*] test168;
+}
+
+class Test168 {
+	val Test169[*] test169;
+}
+
+class Test169 {
+	val Test170[*] test170;
+}
+
+class Test170 {
+	val Test171[*] test171;
+}
+
+class Test171 {
+	val Test172[*] test172;
+}
+
+class Test172 {
+	val Test173[*] test173;
+}
+
+class Test173 {
+	val Test174[*] test174;
+}
+
+class Test174 {
+	val Test175[*] test175;
+}
+
+class Test175 {
+	val Test176[*] test176;
+}
+
+class Test176 {
+	val Test177[*] test177;
+}
+
+class Test177 {
+	val Test178[*] test178;
+}
+
+class Test178 {
+	val Test179[*] test179;
+}
+
+class Test179 {
+	val Test180[*] test180;
+}
+
+class Test180 {
+	val Test181[*] test181;
+}
+
+class Test181 {
+	val Test182[*] test182;
+}
+
+class Test182 {
+	val Test183[*] test183;
+}
+
+class Test183 {
+	val Test184[*] test184;
+}
+
+class Test184 {
+	val Test185[*] test185;
+}
+
+class Test185 {
+	val Test186[*] test186;
+}
+
+class Test186 {
+	val Test187[*] test187;
+}
+
+class Test187 {
+	val Test188[*] test188;
+}
+
+class Test188 {
+	val Test189[*] test189;
+}
+
+class Test189 {
+	val Test190[*] test190;
+}
+
+class Test190 {
+	val Test191[*] test191;
+}
+
+class Test191 {
+	val Test192[*] test192;
+}
+
+class Test192 {
+	val Test193[*] test193;
+}
+
+class Test193 {
+	val Test194[*] test194;
+}
+
+class Test194 {
+	val Test195[*] test195;
+}
+
+class Test195 {
+	val Test196[*] test196;
+}
+
+class Test196 {
+	val Test197[*] test197;
+}
+
+class Test197 {
+	val Test198[*] test198;
+}
+
+class Test198 {
+	val Test199[*] test199;
+}
+
+class Test199 {
+	val Test200[*] test200;
+}
+
+class Test200 {
+attr String name;
+}
+
