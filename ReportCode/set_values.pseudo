@@ -1,0 +1,16 @@
+function set_values(current_element, model_element, unresolved_references)
+  /* this deals with setting attributes and unresolved references */
+  for each attribute to set within current_element do |\label{line:set_4}|
+    if attribute is eAttribute then |\label{line:set_5}|
+      set the value of the feature in the model_element
+    else /* this attribute is in fact an eReference */ |\label{line:set_7}|
+      if attribute is single-valued then
+        push unresolved eReference to unresolved_references stack
+      else /* this is multi-valued */ |\label{line:set_10}|
+        for each attribute do
+          push unresolved eReference to unresolved_references stack
+        end
+      end
+    end
+  end
+end function

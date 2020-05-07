@@ -1,0 +1,44 @@
+function process_element(current_element, stack, unresolved_references)
+  /* executed with any element inside YAML tree, aside from attribute values */
+  let ePackage = current ePackage from package registry
+  if stack is empty then |\label{line:process_6}|
+  /* this is the first element */
+    let eClass = class from ePackage matching name of current_element
+    if eClass does not exist then |\label{line:process_10}|
+      throw a parse error and exit
+    else if eClass does exist then |\label{line:process_13}|
+      let eObject = instantiated eClass
+      push eObject to ePackage registry as root element
+      push eObject to the stack
+    end
+  else if top stack element is a model object then |\label{line:process_19}|
+    let parent = top stack object
+    if current_element has no values then |\label{line:process_22}|
+      /* the current element is an leaf node (attribute) */
+      let eAttribute = attribute from parent eClass matching current_element name
+      call set_values(current_element, parent, unresolved_references)
+    else if current_element is a map, holding other values (not attribute) then |\label{line:process_27}|
+      /* this element is a containment slot */
+      let eReference = eReference from ePackage matching name of current_element
+      push containment slot containing parent and current eReference
+    else /* this element has attributes to set */ |\label{line:process_32}|
+      let eClass = class from ePackage matching name of current_element
+      let eObject = instantiation of eClass
+      let eReference = eReference containing parent eClass
+      call set_values(current_element, parent, unresolved_references)
+      if current reference is many-valued then |\label{line:process_38}|
+        get existing values from parent
+        push new value to this list, setting eReference value to eObject
+      else /* reference is single-valued */ |\label{line:process_42}|
+        set eReference value to eObject
+      end
+      push eObject to stack
+    end
+  else if top stack element is a reference slot then |\label{line:process_48}|
+    /* this element is a model element, with a parent containment */
+    let eReference = top of stack element
+    let eClass = class from ePackage matching name of current_element
+    let eObject = instantiation of eClass
+    /* same as lines 34 - 44 */
+  end
+end function

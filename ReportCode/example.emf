@@ -1,0 +1,27 @@
+@namespace(
+	uri="http://example.emf", prefix="")
+
+package example;
+
+class University {
+	val Student[*] students;
+	val Staff[*] staff;
+	val Module[*] modules;
+}
+
+class Student {
+	attr String name;
+	val Module[*] modules;
+	val Staff supervisor;
+}
+
+class Staff {
+	attr String name;
+	val Module[*] taughtModules;
+}
+
+class Module {
+	attr String name;
+	attr int credits;
+}
+
